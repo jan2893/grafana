@@ -1,0 +1,6 @@
+API rule violation: list_type_missing,github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1,TimeInterval,Times
+API rule violation: list_type_missing,github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1,TimeIntervalsSpec,Intervals
+API rule violation: names_match,github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1,TimeInterval,DaysOfMonth
+API rule violation: names_match,github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1,TimeIntervalTimeRange,EndMinute
+API rule violation: names_match,github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1,TimeIntervalTimeRange,StartMinute
+API rule violation: names_match,github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1,TimeIntervalsSpec,Intervals
