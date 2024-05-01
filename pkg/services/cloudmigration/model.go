@@ -1,8 +1,6 @@
 package cloudmigration
 
 import (
-	"encoding/json"
-	"errors"
 	"time"
 
 	"github.com/grafana/grafana/pkg/util/errutil"
@@ -28,24 +26,6 @@ type CloudMigration struct {
 	Updated     time.Time `json:"updated"`
 }
 
-type MigratedResourceResult struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
-}
-
-type MigrationResult struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
-}
-
-type MigratedResource struct {
-	Type   string                 `json:"type"`
-	ID     string                 `json:"id"`
-	RefID  string                 `json:"refID"`
-	Name   string                 `json:"name"`
-	Result MigratedResourceResult `json:"result"`
-}
-
 type CloudMigrationRun struct {
 	ID                int64     `json:"id" xorm:"pk autoincr 'id'"`
 	CloudMigrationUID string    `json:"uid" xorm:"cloud_migration_uid"`
@@ -55,25 +35,8 @@ type CloudMigrationRun struct {
 	Finished          time.Time `json:"finished"`
 }
 
-func (r CloudMigrationRun) ToResponse() (*MigrateDataResponseDTO, error) {
-	var result MigrateDataResponseDTO
-	err := json.Unmarshal(r.Result, &result)
-	if err != nil {
-		return nil, errors.New("could not parse result of run")
-	}
-	result.RunID = r.ID
-	return &result, nil
-}
-
 type CloudMigrationRunList struct {
 	Runs []MigrateDataResponseListDTO `json:"runs"`
-}
-
-// swagger:parameters createMigration
-type CloudMigrationRequestParams struct {
-	// required: true
-	// in: body
-	Body CloudMigrationRequest `json:"body"`
 }
 
 type CloudMigrationRequest struct {
@@ -85,28 +48,6 @@ type CloudMigrationResponse struct {
 	Stack   string    `json:"stack"`
 	Created time.Time `json:"created"`
 	Updated time.Time `json:"updated"`
-}
-
-type CloudMigrationListResponse struct {
-	Migrations []CloudMigrationResponse `json:"migrations"`
-}
-
-type MigrateDatasourcesRequest struct {
-	MigrateToPDC       bool
-	MigrateCredentials bool
-}
-
-type MigrateDatasourcesResponse struct {
-	DatasourcesMigrated int
-}
-
-type MigrateDatasourcesRequestDTO struct {
-	MigrateToPDC       bool `json:"migrateToPDC"`
-	MigrateCredentials bool `json:"migrateCredentials"`
-}
-
-type MigrateDatasourcesResponseDTO struct {
-	DatasourcesMigrated int `json:"datasourcesMigrated"`
 }
 
 // access token
@@ -141,8 +82,7 @@ type Base64HGInstance struct {
 	ClusterSlug string
 }
 
-// dtos for cms api
-
+// cms api dtos
 // swagger:enum MigrateDataType
 type MigrateDataType string
 
@@ -171,21 +111,6 @@ const (
 	ItemStatusError ItemStatus = "ERROR"
 )
 
-type MigrateDataResponseDTO struct {
-	RunID int64                        `json:"id"`
-	Items []MigrateDataResponseItemDTO `json:"items"`
-}
-
 type MigrateDataResponseListDTO struct {
 	RunID int64 `json:"id"`
-}
-
-type MigrateDataResponseItemDTO struct {
-	// required:true
-	Type MigrateDataType `json:"type"`
-	// required:true
-	RefID string `json:"refId"`
-	// required:true
-	Status ItemStatus `json:"status"`
-	Error  string     `json:"error,omitempty"`
 }

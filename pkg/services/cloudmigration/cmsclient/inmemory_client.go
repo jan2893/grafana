@@ -3,8 +3,6 @@ package cmsclient
 import (
 	"context"
 	"math/rand"
-
-	"github.com/grafana/grafana/pkg/services/cloudmigration"
 )
 
 // NewInMemoryClient returns an implementation of Client that returns canned responses
@@ -14,34 +12,35 @@ func NewInMemoryClient() Client {
 
 type memoryClientImpl struct{}
 
-func (c *memoryClientImpl) ValidateKey(ctx context.Context, cm cloudmigration.CloudMigration) error {
+func (c *memoryClientImpl) ValidateKey(ctx context.Context, input ValidateKeyInput) error {
 	// return ErrMigrationNotDeleted
 	return nil
 }
 
 func (c *memoryClientImpl) MigrateData(
 	ctx context.Context,
-	cm cloudmigration.CloudMigration,
-	request cloudmigration.MigrateDataRequestDTO,
-) (*cloudmigration.MigrateDataResponseDTO, error) {
+	cm MigrateDataInput,
+	request MigrateDataRequestDTO,
+) (*MigrateDataResponseDTO, error) {
 	//return nil, ErrMigrationNotDeleted
 
-	result := cloudmigration.MigrateDataResponseDTO{
-		Items: make([]cloudmigration.MigrateDataResponseItemDTO, len(request.Items)),
+	result := MigrateDataResponseDTO{
+		Items: make([]MigrateDataResponseItemDTO, len(request.Items)),
 	}
 
 	for i, v := range request.Items {
-		result.Items[i] = cloudmigration.MigrateDataResponseItemDTO{
+		result.Items[i] = MigrateDataResponseItemDTO{
 			Type:   v.Type,
 			RefID:  v.RefID,
-			Status: cloudmigration.ItemStatusOK,
+			Status: "OK",
 		}
 	}
 
 	// simulate flakiness on one random item
 	i := rand.Intn(len(result.Items))
 	failedItem := result.Items[i]
-	failedItem.Status, failedItem.Error = cloudmigration.ItemStatusError, "simulated random error"
+	failedItem.Status = "ERROR"
+	failedItem.Error = "simulated random error"
 	result.Items[i] = failedItem
 
 	return &result, nil

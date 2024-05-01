@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -94,7 +95,7 @@ func (cma *CloudMigrationAPI) GetMigrationList(c *contextmodel.ReqContext) respo
 		return response.Error(http.StatusInternalServerError, "migration list error", err)
 	}
 
-	return response.JSON(http.StatusOK, cloudMigrations)
+	return response.JSON(http.StatusOK, CloudMigrationBody{Migrations: cloudMigrations})
 }
 
 // swagger:route GET /cloudmigration/migration/{id} migrations getCloudMigration
@@ -210,11 +211,13 @@ func (cma *CloudMigrationAPI) GetMigrationRun(c *contextmodel.ReqContext) respon
 		return response.Error(http.StatusInternalServerError, "migration status error", err)
 	}
 
-	runResponse, err := migrationStatus.ToResponse()
-	if err != nil {
+	var runResponse MigrateDataResponseDTO
+	if err := json.Unmarshal(migrationStatus.Result, &runResponse); err != nil {
 		cma.log.Error("could not return migration run", "err", err)
 		return response.Error(http.StatusInternalServerError, "migration run get error", err)
 	}
+
+	runResponse.RunID = migrationStatus.ID
 
 	return response.JSON(http.StatusOK, runResponse)
 }
@@ -300,13 +303,32 @@ type DeleteMigrationRequest struct {
 // swagger:response cloudMigrationRunResponse
 type CloudMigrationRunResponse struct {
 	// in: body
-	Body cloudmigration.MigrateDataResponseDTO
+	Body MigrateDataResponseDTO
+}
+
+type MigrateDataResponseDTO struct {
+	RunID int64                        `json:"id"`
+	Items []MigrateDataResponseItemDTO `json:"items"`
+}
+
+type MigrateDataResponseItemDTO struct {
+	// required:true
+	Type cloudmigration.MigrateDataType `json:"type"`
+	// required:true
+	RefID string `json:"refId"`
+	// required:true
+	Status cloudmigration.ItemStatus `json:"status"`
+	Error  string                    `json:"error,omitempty"`
 }
 
 // swagger:response cloudMigrationListResponse
 type CloudMigrationListResponse struct {
 	// in: body
-	Body cloudmigration.CloudMigrationListResponse
+	Body CloudMigrationBody
+}
+
+type CloudMigrationBody struct {
+	Migrations []cloudmigration.CloudMigrationResponse `json:"migrations"`
 }
 
 // swagger:response cloudMigrationResponse

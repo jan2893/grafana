@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/grafana/grafana/pkg/infra/log"
-	"github.com/grafana/grafana/pkg/services/cloudmigration"
 )
 
 // NewCMSClient returns an implementation of Client that queries CloudMigrationService
@@ -24,10 +23,10 @@ type cmsClientImpl struct {
 	log    *log.ConcreteLogger
 }
 
-func (c *cmsClientImpl) ValidateKey(ctx context.Context, cm cloudmigration.CloudMigration) error {
+func (c *cmsClientImpl) ValidateKey(ctx context.Context, input ValidateKeyInput) error {
 	logger := c.log.FromContext(ctx)
 
-	path := fmt.Sprintf("https://cms-%s.%s/cloud-migrations/api/v1/validate-key", cm.ClusterSlug, c.domain)
+	path := fmt.Sprintf("https://cms-%s.%s/cloud-migrations/api/v1/validate-key", input.ClusterSlug, c.domain)
 
 	// validation is an empty POST to CMS with the authorization header included
 	req, err := http.NewRequest("POST", path, bytes.NewReader(nil))
@@ -36,7 +35,7 @@ func (c *cmsClientImpl) ValidateKey(ctx context.Context, cm cloudmigration.Cloud
 		return fmt.Errorf("http request error: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %d:%s", cm.StackID, cm.AuthToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %d:%s", input.StackID, input.AuthToken))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -63,7 +62,7 @@ func (c *cmsClientImpl) ValidateKey(ctx context.Context, cm cloudmigration.Cloud
 	return nil
 }
 
-func (c *cmsClientImpl) MigrateData(ctx context.Context, cm cloudmigration.CloudMigration, request cloudmigration.MigrateDataRequestDTO) (*cloudmigration.MigrateDataResponseDTO, error) {
+func (c *cmsClientImpl) MigrateData(ctx context.Context, cm MigrateDataInput, request MigrateDataRequestDTO) (*MigrateDataResponseDTO, error) {
 	logger := c.log.FromContext(ctx)
 
 	path := fmt.Sprintf("https://cms-%s.%s/cloud-migrations/api/v1/migrate-data", cm.ClusterSlug, c.domain)
@@ -98,7 +97,7 @@ func (c *cmsClientImpl) MigrateData(ctx context.Context, cm cloudmigration.Cloud
 		}
 	}()
 
-	var result cloudmigration.MigrateDataResponseDTO
+	var result MigrateDataResponseDTO
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		logger.Error("unmarshalling response body: %w", err)
 		return nil, fmt.Errorf("unmarshalling migration run response: %w", err)

@@ -227,11 +227,15 @@ func (s *Service) findAccessPolicyByName(ctx context.Context, regionSlug, access
 	return nil, nil
 }
 
-func (s *Service) ValidateToken(ctx context.Context, cm cloudmigration.CloudMigration) error {
+func (s *Service) ValidateToken(ctx context.Context, token cloudmigration.Base64EncodedTokenPayload) error {
 	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.ValidateToken")
 	defer span.End()
 
-	if err := s.cmsClient.ValidateKey(ctx, cm); err != nil {
+	if err := s.cmsClient.ValidateKey(ctx, cmsclient.ValidateKeyInput{
+		AuthToken:   token.Token,
+		StackID:     token.Instance.StackID,
+		ClusterSlug: token.Instance.ClusterSlug,
+	}); err != nil {
 		return fmt.Errorf("validating key: %w", err)
 	}
 
@@ -249,10 +253,13 @@ func (s *Service) GetMigration(ctx context.Context, id int64) (*cloudmigration.C
 	return migration, nil
 }
 
-func (s *Service) GetMigrationList(ctx context.Context) (*cloudmigration.CloudMigrationListResponse, error) {
+func (s *Service) GetMigrationList(ctx context.Context) ([]cloudmigration.CloudMigrationResponse, error) {
+	ctx, span := s.tracer.Start(ctx, "CloudMigrationService.GetMigrationList")
+	defer span.End()
+
 	values, err := s.store.GetAllCloudMigrations(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fetching migratons from database: %w", err)
 	}
 
 	migrations := make([]cloudmigration.CloudMigrationResponse, 0)
@@ -264,7 +271,7 @@ func (s *Service) GetMigrationList(ctx context.Context) (*cloudmigration.CloudMi
 			Updated: v.Updated,
 		})
 	}
-	return &cloudmigration.CloudMigrationListResponse{Migrations: migrations}, nil
+	return migrations, nil
 }
 
 func (s *Service) CreateMigration(ctx context.Context, cmd cloudmigration.CloudMigrationRequest) (*cloudmigration.CloudMigrationResponse, error) {
@@ -281,13 +288,12 @@ func (s *Service) CreateMigration(ctx context.Context, cmd cloudmigration.CloudM
 		return nil, fmt.Errorf("invalid token") // don't want to leak info here
 	}
 
-	migration := token.ToMigration()
 	// validate token against cms before saving
-	if err := s.ValidateToken(ctx, migration); err != nil {
+	if err := s.ValidateToken(ctx, token); err != nil {
 		return nil, fmt.Errorf("token validation: %w", err)
 	}
 
-	cm, err := s.store.CreateMigration(ctx, migration)
+	cm, err := s.store.CreateMigration(ctx, token.ToMigration())
 	if err != nil {
 		return nil, fmt.Errorf("error creating migration: %w", err)
 	}
@@ -305,7 +311,7 @@ func (s *Service) UpdateMigration(ctx context.Context, id int64, cm cloudmigrati
 	return nil, nil
 }
 
-func (s *Service) RunMigration(ctx context.Context, id int64) (*cloudmigration.MigrateDataResponseDTO, error) {
+func (s *Service) RunMigration(ctx context.Context, id int64) (*cmsclient.MigrateDataResponseDTO, error) {
 	// Get migration to read the auth token
 	migration, err := s.GetMigration(ctx, id)
 	if err != nil {
@@ -320,7 +326,11 @@ func (s *Service) RunMigration(ctx context.Context, id int64) (*cloudmigration.M
 	}
 
 	// Call the cms service
-	resp, err := s.cmsClient.MigrateData(ctx, *migration, *request)
+	resp, err := s.cmsClient.MigrateData(ctx, cmsclient.MigrateDataInput{
+		AuthToken:   migration.AuthToken,
+		StackID:     migration.StackID,
+		ClusterSlug: migration.ClusterSlug,
+	}, *request)
 	if err != nil {
 		s.log.Error("error migrating data: %w", err)
 		return nil, fmt.Errorf("migrate data error: %w", err)
@@ -347,8 +357,8 @@ func (s *Service) RunMigration(ctx context.Context, id int64) (*cloudmigration.M
 	return resp, nil
 }
 
-func (s *Service) getMigrationDataJSON(ctx context.Context) (*cloudmigration.MigrateDataRequestDTO, error) {
-	var migrationDataSlice []cloudmigration.MigrateDataRequestItemDTO
+func (s *Service) getMigrationDataJSON(ctx context.Context) (*cmsclient.MigrateDataRequestDTO, error) {
+	var migrationDataSlice []cmsclient.MigrateDataRequestItemDTO
 	// Data sources
 	dataSources, err := s.getDataSources(ctx)
 	if err != nil {
@@ -356,8 +366,8 @@ func (s *Service) getMigrationDataJSON(ctx context.Context) (*cloudmigration.Mig
 		return nil, err
 	}
 	for _, ds := range dataSources {
-		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItemDTO{
-			Type:  cloudmigration.DatasourceDataType,
+		migrationDataSlice = append(migrationDataSlice, cmsclient.MigrateDataRequestItemDTO{
+			Type:  cmsclient.MigrateDataType(cloudmigration.DatasourceDataType),
 			RefID: ds.UID,
 			Name:  ds.Name,
 			Data:  ds,
@@ -373,8 +383,8 @@ func (s *Service) getMigrationDataJSON(ctx context.Context) (*cloudmigration.Mig
 
 	for _, dashboard := range dashboards {
 		dashboard.Data.Del("id")
-		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItemDTO{
-			Type:  cloudmigration.DashboardDataType,
+		migrationDataSlice = append(migrationDataSlice, cmsclient.MigrateDataRequestItemDTO{
+			Type:  cmsclient.MigrateDataType(cloudmigration.DashboardDataType),
 			RefID: dashboard.UID,
 			Name:  dashboard.Title,
 			Data:  map[string]any{"dashboard": dashboard.Data},
@@ -389,14 +399,14 @@ func (s *Service) getMigrationDataJSON(ctx context.Context) (*cloudmigration.Mig
 	}
 
 	for _, f := range folders {
-		migrationDataSlice = append(migrationDataSlice, cloudmigration.MigrateDataRequestItemDTO{
-			Type:  cloudmigration.FolderDataType,
+		migrationDataSlice = append(migrationDataSlice, cmsclient.MigrateDataRequestItemDTO{
+			Type:  cmsclient.MigrateDataType(cloudmigration.FolderDataType),
 			RefID: f.UID,
 			Name:  f.Title,
 			Data:  f,
 		})
 	}
-	migrationData := &cloudmigration.MigrateDataRequestDTO{
+	migrationData := &cmsclient.MigrateDataRequestDTO{
 		Items: migrationDataSlice,
 	}
 
