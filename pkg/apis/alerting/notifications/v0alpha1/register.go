@@ -8,9 +8,15 @@ import (
 )
 
 const (
-	GROUP      = "time-intervals.notifications.alerting.grafana.app"
+	GROUP      = "notifications.alerting.grafana.app"
 	VERSION    = "v0alpha1"
 	APIVERSION = GROUP + "/" + VERSION
+)
+
+var TemplateResourceInfo = common.NewResourceInfo(GROUP, VERSION,
+	"templates", "template", "Template",
+	func() runtime.Object { return &Template{} },
+	func() runtime.Object { return &TemplateList{} },
 )
 
 var TimeIntervalResourceInfo = common.NewResourceInfo(GROUP, VERSION,

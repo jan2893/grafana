@@ -4,8 +4,7 @@ import (
 	"context"
 
 	"github.com/grafana/grafana/pkg/registry"
-	"github.com/grafana/grafana/pkg/registry/apis/alerting/notifications/templates"
-	timeInterval "github.com/grafana/grafana/pkg/registry/apis/alerting/notifications/time-interval"
+	"github.com/grafana/grafana/pkg/registry/apis/alerting/notifications"
 	"github.com/grafana/grafana/pkg/registry/apis/dashboard"
 	"github.com/grafana/grafana/pkg/registry/apis/dashboardsnapshot"
 	"github.com/grafana/grafana/pkg/registry/apis/datasource"
@@ -37,8 +36,7 @@ func ProvideRegistryServiceSink(
 	_ *peakq.PeakQAPIBuilder,
 	_ *scope.ScopeAPIBuilder,
 	_ *query.QueryAPIBuilder,
-	_ *timeInterval.TimeIntervalsAPIBuilder,
-	_ *templates.TemplateAPIBuilder,
+	_ *notifications.NotificationsAPIBuilder,
 ) *Service {
 	return &Service{}
 }

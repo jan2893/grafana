@@ -1,4 +1,4 @@
-package templates
+package template
 
 import (
 	"context"
@@ -10,8 +10,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/rest"
 
-	templates "github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1"
+	notifications "github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1"
 	"github.com/grafana/grafana/pkg/services/apiserver/endpoints/request"
+	"github.com/grafana/grafana/pkg/services/ngalert/api/tooling/definitions"
 )
 
 var (
@@ -25,7 +26,13 @@ var (
 	_ rest.GracefulDeleter      = (*legacyStorage)(nil)
 )
 
-var resourceInfo = templates.TemplateResourceInfo
+type TemplateService interface {
+	GetTemplates(ctx context.Context, orgID int64) ([]definitions.NotificationTemplate, error)
+	SetTemplate(ctx context.Context, orgID int64, tmpl definitions.NotificationTemplate) (definitions.NotificationTemplate, error)
+	DeleteTemplate(ctx context.Context, orgID int64, name string) error
+}
+
+var resourceInfo = notifications.TemplateResourceInfo
 
 type legacyStorage struct {
 	service        TemplateService
@@ -101,7 +108,7 @@ func (s *legacyStorage) Create(ctx context.Context,
 			return nil, err
 		}
 	}
-	p, ok := obj.(*templates.Template)
+	p, ok := obj.(*notifications.Template)
 	if !ok {
 		return nil, fmt.Errorf("expected template but got %s", obj.GetObjectKind().GroupVersionKind())
 	}
@@ -154,7 +161,7 @@ func (s *legacyStorage) Update(ctx context.Context,
 			}
 		}
 	}
-	p, ok := obj.(*templates.Template)
+	p, ok := obj.(*notifications.Template)
 	if !ok {
 		return nil, false, fmt.Errorf("expected template but got %s", obj.GetObjectKind().GroupVersionKind())
 	}

@@ -1,31 +1,31 @@
-package time_interval
+package time_intervals
 
 import (
 	"encoding/json"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	timeInterval "github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1"
+	notifications "github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1"
 	"github.com/grafana/grafana/pkg/services/apiserver/endpoints/request"
 	"github.com/grafana/grafana/pkg/services/ngalert/api/tooling/definitions"
 )
 
-func convertToK8sResources(orgID int64, intervals []definitions.MuteTimeInterval, namespacer request.NamespaceMapper) (*timeInterval.TimeIntervalsList, error) {
+func convertToK8sResources(orgID int64, intervals []definitions.MuteTimeInterval, namespacer request.NamespaceMapper) (*notifications.TimeIntervalsList, error) {
 	data, err := json.Marshal(intervals)
 	if err != nil {
 		return nil, err
 	}
-	var specs []timeInterval.TimeIntervalsSpec
+	var specs []notifications.TimeIntervalsSpec
 	err = json.Unmarshal(data, &specs)
 	if err != nil {
 		return nil, err
 	}
-	result := &timeInterval.TimeIntervalsList{}
+	result := &notifications.TimeIntervalsList{}
 	for idx := range specs {
 		interval := intervals[idx]
 		spec := specs[idx]
-		result.Items = append(result.Items, timeInterval.TimeIntervals{
-			TypeMeta: timeInterval.TimeIntervalResourceInfo.TypeMeta(),
+		result.Items = append(result.Items, notifications.TimeIntervals{
+			TypeMeta: resourceInfo.TypeMeta(),
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      interval.Name,
 				Namespace: namespacer(orgID),
@@ -40,19 +40,19 @@ func convertToK8sResources(orgID int64, intervals []definitions.MuteTimeInterval
 	return result, nil
 }
 
-func convertToK8sResource(orgID int64, interval definitions.MuteTimeInterval, namespacer request.NamespaceMapper) (*timeInterval.TimeIntervals, error) {
+func convertToK8sResource(orgID int64, interval definitions.MuteTimeInterval, namespacer request.NamespaceMapper) (*notifications.TimeIntervals, error) {
 	data, err := json.Marshal(interval)
 	if err != nil {
 		return nil, err
 	}
-	spec := timeInterval.TimeIntervalsSpec{}
+	spec := notifications.TimeIntervalsSpec{}
 	err = json.Unmarshal(data, &spec)
 	if err != nil {
 		return nil, err
 	}
 
-	return &timeInterval.TimeIntervals{
-		TypeMeta: timeInterval.TimeIntervalResourceInfo.TypeMeta(),
+	return &notifications.TimeIntervals{
+		TypeMeta: resourceInfo.TypeMeta(),
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      interval.Name,
 			Namespace: namespacer(orgID),
@@ -64,7 +64,7 @@ func convertToK8sResource(orgID int64, interval definitions.MuteTimeInterval, na
 	}, nil
 }
 
-func convertToDomainModel(interval *timeInterval.TimeIntervals) (definitions.MuteTimeInterval, error) {
+func convertToDomainModel(interval *notifications.TimeIntervals) (definitions.MuteTimeInterval, error) {
 	b, err := json.Marshal(interval.Spec)
 	if err != nil {
 		return definitions.MuteTimeInterval{}, err

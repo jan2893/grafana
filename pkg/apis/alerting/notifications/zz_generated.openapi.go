@@ -16,18 +16,18 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.Template":                   schema_alerting_notifications_templates_v0alpha1_Template(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.TemplateList":               schema_alerting_notifications_templates_v0alpha1_TemplateList(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.TemplateSpec":               schema_alerting_notifications_templates_v0alpha1_TemplateSpec(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeInterval":          schema_alerting_notifications_time_intervals_v0alpha1_TimeInterval(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalTimeRange": schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalTimeRange(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervals":         schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervals(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalsList":     schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsList(ref),
-		"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalsSpec":     schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsSpec(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.Template":              schema_apis_alerting_notifications_v0alpha1_Template(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TemplateList":          schema_apis_alerting_notifications_v0alpha1_TemplateList(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TemplateSpec":          schema_apis_alerting_notifications_v0alpha1_TemplateSpec(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeInterval":          schema_apis_alerting_notifications_v0alpha1_TimeInterval(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalTimeRange": schema_apis_alerting_notifications_v0alpha1_TimeIntervalTimeRange(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervals":         schema_apis_alerting_notifications_v0alpha1_TimeIntervals(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalsList":     schema_apis_alerting_notifications_v0alpha1_TimeIntervalsList(ref),
+		"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalsSpec":     schema_apis_alerting_notifications_v0alpha1_TimeIntervalsSpec(ref),
 	}
 }
 
-func schema_alerting_notifications_templates_v0alpha1_Template(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_Template(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -56,18 +56,18 @@ func schema_alerting_notifications_templates_v0alpha1_Template(ref common.Refere
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.TemplateSpec"),
+							Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TemplateSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.TemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_alerting_notifications_templates_v0alpha1_TemplateList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TemplateList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -100,7 +100,7 @@ func schema_alerting_notifications_templates_v0alpha1_TemplateList(ref common.Re
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.Template"),
+										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.Template"),
 									},
 								},
 							},
@@ -110,11 +110,11 @@ func schema_alerting_notifications_templates_v0alpha1_TemplateList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/pkg/apis/alerting/notifications/templates/v0alpha1.Template", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.Template", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_alerting_notifications_templates_v0alpha1_TemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -134,7 +134,7 @@ func schema_alerting_notifications_templates_v0alpha1_TemplateSpec(ref common.Re
 	}
 }
 
-func schema_alerting_notifications_time_intervals_v0alpha1_TimeInterval(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TimeInterval(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -147,7 +147,7 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeInterval(ref comm
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalTimeRange"),
+										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalTimeRange"),
 									},
 								},
 							},
@@ -219,11 +219,11 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeInterval(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalTimeRange"},
+			"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalTimeRange"},
 	}
 }
 
-func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalTimeRange(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TimeIntervalTimeRange(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -250,7 +250,7 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalTimeRange
 	}
 }
 
-func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervals(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TimeIntervals(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -279,18 +279,18 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervals(ref com
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalsSpec"),
+							Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalsSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervalsSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervalsSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TimeIntervalsList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -323,7 +323,7 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsList(ref
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervals"),
+										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervals"),
 									},
 								},
 							},
@@ -333,11 +333,11 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsList(ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeIntervals", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeIntervals", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apis_alerting_notifications_v0alpha1_TimeIntervalsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -350,7 +350,7 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsSpec(ref
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeInterval"),
+										Ref:     ref("github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeInterval"),
 									},
 								},
 							},
@@ -360,6 +360,6 @@ func schema_alerting_notifications_time_intervals_v0alpha1_TimeIntervalsSpec(ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1.TimeInterval"},
+			"github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1.TimeInterval"},
 	}
 }

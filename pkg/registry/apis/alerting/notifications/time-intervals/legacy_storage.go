@@ -1,4 +1,4 @@
-package time_interval
+package time_intervals
 
 import (
 	"context"
@@ -9,8 +9,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/rest"
 
-	timeInterval "github.com/grafana/grafana/pkg/apis/alerting/notifications/time-intervals/v0alpha1"
+	notifications "github.com/grafana/grafana/pkg/apis/alerting/notifications/v0alpha1"
 	"github.com/grafana/grafana/pkg/services/apiserver/endpoints/request"
+	"github.com/grafana/grafana/pkg/services/ngalert/api/tooling/definitions"
 )
 
 var (
@@ -24,7 +25,15 @@ var (
 	_ rest.GracefulDeleter      = (*legacyStorage)(nil)
 )
 
-var resourceInfo = timeInterval.TimeIntervalResourceInfo
+var resourceInfo = notifications.TimeIntervalResourceInfo
+
+type TimeIntervalService interface {
+	GetMuteTimings(ctx context.Context, orgID int64) ([]definitions.MuteTimeInterval, error)
+	GetMuteTiming(ctx context.Context, name string, orgID int64) (definitions.MuteTimeInterval, error)
+	CreateMuteTiming(ctx context.Context, mt definitions.MuteTimeInterval, orgID int64) (definitions.MuteTimeInterval, error)
+	UpdateMuteTiming(ctx context.Context, mt definitions.MuteTimeInterval, orgID int64) (definitions.MuteTimeInterval, error)
+	DeleteMuteTiming(ctx context.Context, name string, orgID int64) error
+}
 
 type legacyStorage struct {
 	service        TimeIntervalService
@@ -95,7 +104,7 @@ func (s *legacyStorage) Create(ctx context.Context,
 			return nil, err
 		}
 	}
-	p, ok := obj.(*timeInterval.TimeIntervals)
+	p, ok := obj.(*notifications.TimeIntervals)
 	if !ok {
 		return nil, fmt.Errorf("expected time-interval but got %s", obj.GetObjectKind().GroupVersionKind())
 	}
@@ -137,7 +146,7 @@ func (s *legacyStorage) Update(ctx context.Context,
 			return nil, false, err
 		}
 	}
-	p, ok := obj.(*timeInterval.TimeIntervals)
+	p, ok := obj.(*notifications.TimeIntervals)
 	if !ok {
 		return nil, false, fmt.Errorf("expected time-interval but got %s", obj.GetObjectKind().GroupVersionKind())
 	}
