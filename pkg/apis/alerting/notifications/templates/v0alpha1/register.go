@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	GROUP      = "notifications.alerting.grafana.app"
+	GROUP      = "templates.notifications.alerting.grafana.app"
 	VERSION    = "v0alpha1"
 	APIVERSION = GROUP + "/" + VERSION
 )

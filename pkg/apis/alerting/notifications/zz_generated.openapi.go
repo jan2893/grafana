@@ -120,13 +120,6 @@ func schema_alerting_notifications_templates_v0alpha1_TemplateSpec(ref common.Re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"template": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -135,7 +128,7 @@ func schema_alerting_notifications_templates_v0alpha1_TemplateSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"name", "template"},
+				Required: []string{"template"},
 			},
 		},
 	}
