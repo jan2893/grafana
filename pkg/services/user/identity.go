@@ -262,5 +262,5 @@ func (u *SignedInUser) GetIDToken() string {
 }
 
 func namespacedID(namespace string, id int64) identity.NamespaceID {
-	return identity.NewNamespaceIDUnchecked(namespace, id)
+	return identity.NewNamespaceID(namespace, id)
 }
