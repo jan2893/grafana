@@ -187,7 +187,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/CloudMigrationListResponse"
+              "$ref": "#/components/schemas/CloudMigrationBody"
             }
           }
         },
@@ -3646,6 +3646,17 @@
         },
         "type": "object"
       },
+      "CloudMigrationBody": {
+        "properties": {
+          "migrations": {
+            "items": {
+              "$ref": "#/components/schemas/CloudMigrationResponse"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
       "CloudMigrationListResponse": {
         "properties": {
           "migrations": {
@@ -6838,14 +6849,15 @@
       },
       "MigrateDataResponseDTO": {
         "properties": {
+          "id": {
+            "format": "int64",
+            "type": "integer"
+          },
           "items": {
             "items": {
               "$ref": "#/components/schemas/MigrateDataResponseItemDTO"
             },
             "type": "array"
-          },
-          "uid": {
-            "type": "string"
           }
         },
         "type": "object"
@@ -14963,17 +14975,6 @@
       },
       "post": {
         "operationId": "createMigration",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloudMigrationRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-originalParamName": "body"
-        },
         "responses": {
           "200": {
             "$ref": "#/components/responses/cloudMigrationResponse"

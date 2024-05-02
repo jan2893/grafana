@@ -113,11 +113,6 @@ const (
 	ItemStatusError ItemStatus = "ERROR"
 )
 
-type MigrateDataResponseDTO struct {
-	RunUID string                       `json:"uid"`
-	Items  []MigrateDataResponseItemDTO `json:"items"`
-}
-
 type MigrateDataResponseListDTO struct {
 	RunUID string `json:"uid"`
 }

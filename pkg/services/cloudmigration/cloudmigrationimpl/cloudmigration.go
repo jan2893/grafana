@@ -310,7 +310,7 @@ func (s *Service) UpdateMigration(ctx context.Context, uid string, request cloud
 	return nil, nil
 }
 
-func (s *Service) RunMigration(ctx context.Context, uid string) (*cloudmigration.MigrateDataResponseDTO, error) {
+func (s *Service) RunMigration(ctx context.Context, uid string) (*cmsclient.MigrateDataResponseDTO, error) {
 	// Get migration to read the auth token
 	migration, err := s.GetMigration(ctx, uid)
 	if err != nil {

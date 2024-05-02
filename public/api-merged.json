@@ -2322,16 +2322,6 @@
         ],
         "summary": "Create a migration.",
         "operationId": "createMigration",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CloudMigrationRequest"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "$ref": "#/responses/cloudMigrationResponse"
@@ -13009,6 +12999,17 @@
         }
       }
     },
+    "CloudMigrationBody": {
+      "type": "object",
+      "properties": {
+        "migrations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CloudMigrationResponse"
+          }
+        }
+      }
+    },
     "CloudMigrationListResponse": {
       "type": "object",
       "properties": {
@@ -16202,14 +16203,15 @@
     "MigrateDataResponseDTO": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
         "items": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/MigrateDataResponseItemDTO"
           }
-        },
-        "uid": {
-          "type": "string"
         }
       }
     },
@@ -21945,7 +21947,7 @@
     "cloudMigrationListResponse": {
       "description": "(empty)",
       "schema": {
-        "$ref": "#/definitions/CloudMigrationListResponse"
+        "$ref": "#/definitions/CloudMigrationBody"
       }
     },
     "cloudMigrationResponse": {

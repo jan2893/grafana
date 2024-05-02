@@ -33,8 +33,8 @@ type MigrateDataRequestItemDTO struct {
 }
 
 type MigrateDataResponseDTO struct {
-	RunID int64                        `json:"id"`
-	Items []MigrateDataResponseItemDTO `json:"items"`
+	RunUID string                       `json:"uid"`
+	Items  []MigrateDataResponseItemDTO `json:"items"`
 }
 
 type MigrateDataResponseItemDTO struct {

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/grafana/grafana/pkg/services/cloudmigration"
+	"github.com/grafana/grafana/pkg/services/cloudmigration/cmsclient"
 )
 
 // NoopServiceImpl Define the Service Implementation.
@@ -50,6 +51,6 @@ func (s *NoopServiceImpl) CreateMigrationRun(context.Context, cloudmigration.Clo
 	return "", cloudmigration.ErrInternalNotImplementedError
 }
 
-func (s *NoopServiceImpl) RunMigration(context.Context, string) (*cloudmigration.MigrateDataResponseDTO, error) {
+func (s *NoopServiceImpl) RunMigration(context.Context, string) (*cmsclient.MigrateDataResponseDTO, error) {
 	return nil, cloudmigration.ErrFeatureDisabledError
 }
