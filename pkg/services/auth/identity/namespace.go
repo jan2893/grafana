@@ -56,30 +56,8 @@ func MustParseNamespaceID(str string) NamespaceID {
 	return namespaceID
 }
 
-// NewNamespaceID creates a new NamespaceID, will fail for invalid namespace.
-func NewNamespaceID(namespace string, id int64) (NamespaceID, error) {
-	var namespaceID NamespaceID
-	if _, ok := namespaceLookup[namespace]; !ok {
-		return namespaceID, ErrInvalidNamespaceID.Errorf("got invalid namespace %s", namespace)
-	}
-	namespaceID.id = strconv.FormatInt(id, 10)
-	namespaceID.namespace = namespace
-	return namespaceID, nil
-}
-
-// MustNewNamespaceID creates a new NamespaceID, will panic for invalid namespace.
-// Suitable to use in tests or when we can guarantee that we pass a correct format.
-func MustNewNamespaceID(namespace string, id int64) NamespaceID {
-	namespaceID, err := NewNamespaceID(namespace, id)
-	if err != nil {
-		panic(err)
-	}
-	return namespaceID
-}
-
-// NewNamespaceIDUnchecked creates a new NamespaceID without checking if namespace is valid.
-// It us up to the caller to ensure that namespace is valid.
-func NewNamespaceIDUnchecked(namespace string, id int64) NamespaceID {
+// NewNamespaceID creates a new NamespaceID.
+func NewNamespaceID(namespace string, id int64) NamespaceID {
 	return NamespaceID{
 		id:        strconv.FormatInt(id, 10),
 		namespace: namespace,
