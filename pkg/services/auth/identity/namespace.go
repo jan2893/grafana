@@ -88,14 +88,6 @@ func (ni NamespaceID) ParseInt() (int64, error) {
 	return strconv.ParseInt(ni.id, 10, 64)
 }
 
-func (ni NamespaceID) ParseIntOrDefault() int64 {
-	id, err := strconv.ParseInt(ni.id, 10, 64)
-	if err != nil {
-		return 0
-	}
-	return id
-}
-
 func (ni NamespaceID) Namespace() string {
 	return ni.namespace
 }
