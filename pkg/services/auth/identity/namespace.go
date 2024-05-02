@@ -15,7 +15,7 @@ const (
 	NamespaceAccessPolicy   = "access-policy"
 )
 
-var AnonymousNamespaceID = MustNewNamespaceID(NamespaceAnonymous, 0)
+var AnonymousNamespaceID = NewNamespaceID(NamespaceAnonymous, 0)
 
 var namespaceLookup = map[string]struct{}{
 	NamespaceUser:           {},
