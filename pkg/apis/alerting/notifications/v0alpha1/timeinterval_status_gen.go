@@ -15,13 +15,12 @@ const (
 )
 
 // TimeIntervalOperatorState defines model for TimeIntervalOperatorState.
-// +k8s:openapi-gen=true
 type TimeIntervalOperatorState struct {
 	// descriptiveState is an optional more descriptive state field which has no requirements on format
 	DescriptiveState *string `json:"descriptiveState,omitempty"`
 
 	// details contains any extra information that is operator-specific
-	Details map[string]interface{} `json:"details,omitempty"`
+	Details map[string]string `json:"details,omitempty"`
 
 	// lastEvaluation is the ResourceVersion last evaluated
 	LastEvaluation string `json:"lastEvaluation"`
@@ -33,14 +32,12 @@ type TimeIntervalOperatorState struct {
 
 // TimeIntervalOperatorStateState state describes the state of the lastEvaluation.
 // It is limited to three possible states for machine evaluation.
-// +k8s:openapi-gen=true
 type TimeIntervalOperatorStateState string
 
 // TimeIntervalStatus defines model for TimeIntervalStatus.
-// +k8s:openapi-gen=true
 type TimeIntervalStatus struct {
-	// additionalFields is reserved for future use
-	AdditionalFields map[string]interface{} `json:"additionalFields,omitempty"`
+	// // additionalFields is reserved for future use
+	AdditionalFields map[string]string `json:"additionalFields,omitempty"`
 
 	// operatorStates is a map of operator ID to operator state evaluations.
 	// Any operator which consumes this kind SHOULD add its state evaluation information to this field.
@@ -48,13 +45,12 @@ type TimeIntervalStatus struct {
 }
 
 // TimeIntervalstatusOperatorState defines model for TimeIntervalstatus.#OperatorState.
-// +k8s:openapi-gen=true
 type TimeIntervalstatusOperatorState struct {
 	// descriptiveState is an optional more descriptive state field which has no requirements on format
 	DescriptiveState *string `json:"descriptiveState,omitempty"`
 
 	// details contains any extra information that is operator-specific
-	Details map[string]interface{} `json:"details,omitempty"`
+	Details map[string]string `json:"details,omitempty"`
 
 	// lastEvaluation is the ResourceVersion last evaluated
 	LastEvaluation string `json:"lastEvaluation"`
@@ -66,5 +62,4 @@ type TimeIntervalstatusOperatorState struct {
 
 // TimeIntervalstatusOperatorStateState state describes the state of the lastEvaluation.
 // It is limited to three possible states for machine evaluation.
-// +k8s:openapi-gen=true
 type TimeIntervalstatusOperatorStateState string

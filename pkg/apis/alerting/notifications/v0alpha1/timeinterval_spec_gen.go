@@ -1,7 +1,6 @@
 package v0alpha1
 
 // TimeIntervalInterval defines model for TimeIntervalInterval.
-// +k8s:openapi-gen=true
 type TimeIntervalInterval struct {
 	DaysOfMonth []string                `json:"daysOfMonth,omitempty"`
 	Location    *string                 `json:"location,omitempty"`
@@ -12,13 +11,11 @@ type TimeIntervalInterval struct {
 }
 
 // TimeIntervalSpec defines model for TimeIntervalSpec.
-// +k8s:openapi-gen=true
 type TimeIntervalSpec struct {
 	Intervals []TimeIntervalInterval `json:"intervals"`
 }
 
 // TimeIntervalTimeRange defines model for TimeIntervalTimeRange.
-// +k8s:openapi-gen=true
 type TimeIntervalTimeRange struct {
 	EndMinute   string `json:"endMinute"`
 	StartMinute string `json:"startMinute"`

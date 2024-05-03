@@ -21,8 +21,8 @@ var TemplateResourceInfo = common.NewResourceInfo(GROUP, VERSION,
 
 var TimeIntervalResourceInfo = common.NewResourceInfo(GROUP, VERSION,
 	"time-intervals", "time-interval", "TimeIntervals",
-	func() runtime.Object { return &TimeIntervals{} },
-	func() runtime.Object { return &TimeIntervalsList{} },
+	func() runtime.Object { return &TimeInterval{} },
+	func() runtime.Object { return &TimeIntervalList{} },
 )
 
 var (
