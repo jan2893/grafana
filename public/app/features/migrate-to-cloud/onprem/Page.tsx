@@ -4,13 +4,14 @@ import React, { useCallback, useState } from 'react';
 import { Alert, Box, Button, Stack } from '@grafana/ui';
 import { Trans, t } from 'app/core/internationalization';
 
+// @todo: replace barrel import path
 import {
   useDeleteCloudMigrationMutation,
   useGetCloudMigrationRunListQuery,
   useGetCloudMigrationRunQuery,
   useGetMigrationListQuery,
   useRunCloudMigrationMutation,
-} from '../api';
+} from '../api/index';
 
 import { DisconnectModal } from './DisconnectModal';
 import { EmptyState } from './EmptyState/EmptyState';

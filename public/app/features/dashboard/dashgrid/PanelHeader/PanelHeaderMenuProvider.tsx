@@ -11,7 +11,8 @@ import { usePluginLinkExtensions } from '@grafana/runtime';
 import { getPanelStateForModel } from 'app/features/panel/state/selectors';
 import { useSelector } from 'app/types';
 
-import { DashboardModel, PanelModel } from '../../state';
+// @todo: replace barrel import path
+import { DashboardModel, PanelModel } from '../../state/index';
 import { getPanelMenu } from '../../utils/getPanelMenu';
 
 interface PanelHeaderMenuProviderApi {

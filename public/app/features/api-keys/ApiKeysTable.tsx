@@ -6,7 +6,8 @@ import { Button, DeleteButton, Icon, Stack, Tooltip, useTheme2 } from '@grafana/
 import { contextSrv } from 'app/core/core';
 import { AccessControlAction } from 'app/types';
 
-import { ApiKey } from '../../types';
+// @todo: replace barrel import path
+import { ApiKey } from '../../types/index';
 
 interface Props {
   apiKeys: ApiKey[];
